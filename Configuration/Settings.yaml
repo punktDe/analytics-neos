@@ -1,0 +1,113 @@
+PunktDe:
+  Analytics:
+    elasticsearch:
+
+      server:
+        host: '127.0.0.1'
+        port: 9200
+        scheme: http
+        user: 'elastic'
+        pass: ''
+
+      indexConfiguration:
+        neos_history:
+          index_patterns:
+            - 'neos_history*'
+          settings:
+            number_of_shards: 1
+            number_of_replicas: 0
+          mappings:
+            properties:
+              date:
+                type: date
+              nodeidentifier:
+                type: keyword
+              documentnodeidentifier:
+                type: keyword
+              workspacename:
+                type: keyword
+              accountidentifier:
+                type: keyword
+              eventtype:
+                type: keyword
+              node_count_change:
+                type: integer
+              hour_of_day:
+                type: keyword
+              day_of_week_label:
+                type: keyword
+              day_of_week_numeric:
+                type: integer
+
+              dimension:
+                type: object
+                properties:
+                  country:
+                    type: keyword
+                  language:
+                    type: keyword
+
+              data:
+                type: object
+                properties:
+                  nodeType:
+                    type: keyword
+                  nodeContextPath:
+                    type: keyword
+                  documentNodeType:
+                    type: keyword
+                  documentNodeContextPath:
+                    type: keyword
+                  documentNodeLabel:
+                    type: keyword
+
+        neos_nodedata:
+          index_patterns:
+            - 'neos_nodedata*'
+          settings:
+            number_of_shards: 1
+            number_of_replicas: 0
+          mappings:
+            properties:
+              creationdatetime:
+                type: date
+              lastmodificationdatetime:
+                type: date
+              lastpublicationdatetime:
+                type: date
+              nodetype:
+                type: keyword
+              nodeidentifier:
+                type: keyword
+              workspacename:
+                type: keyword
+              dimensionvalues:
+                type: object
+
+
+    persistence:
+      neos_history:
+        backendOptions:
+          driver: 'pdo_mysql'
+          charset: 'utf8mb4'
+          dbname: '%env:MYSQL_DATABASE%'
+          user: '%env:MYSQL_USERNAME%'
+          password: '%env:MYSQL_PASSWORD%'
+          host: '%env:MYSQL_HOST%'
+        doctrine:
+          enable: true,
+          sqlLogger: null,
+          secondLevelCache: [ ]
+
+      neos_nodedata:
+        backendOptions:
+          driver: 'pdo_mysql'
+          charset: 'utf8mb4'
+          dbname: '%env:MYSQL_DATABASE%'
+          user: '%env:MYSQL_USERNAME%'
+          password: '%env:MYSQL_PASSWORD%'
+          host: '%env:MYSQL_HOST%'
+        doctrine:
+          enable: true,
+          sqlLogger: null,
+          secondLevelCache: [ ]
