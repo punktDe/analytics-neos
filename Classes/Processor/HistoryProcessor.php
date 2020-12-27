@@ -48,7 +48,9 @@ class HistoryProcessor implements ElasticsearchProcessorInterface
 
 
         switch ($record['eventtype']) {
+            case 'Node.Copy':
             case 'Node.Added':
+            case 'Node.Adopt':
                 $document['node_count_change'] = 1;
                 break;
             case 'Node.Removed':
