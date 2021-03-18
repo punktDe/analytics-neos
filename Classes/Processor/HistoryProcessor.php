@@ -9,6 +9,8 @@ namespace PunktDe\Analytics\Neos\Processor;
  */
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Neos\Domain\Model\Site;
+use Neos\Neos\Domain\Repository\SiteRepository;
 use Psr\Log\LoggerInterface;
 use PunktDe\Analytics\Processor\ElasticsearchProcessorInterface;
 
@@ -17,7 +19,6 @@ use PunktDe\Analytics\Processor\ElasticsearchProcessorInterface;
  */
 class HistoryProcessor implements ElasticsearchProcessorInterface
 {
-
     public function convertRecordToDocument(array $record, string $indexName): ?array
     {
         $id = $record['uid'];
@@ -46,6 +47,11 @@ class HistoryProcessor implements ElasticsearchProcessorInterface
             'day_of_week_numeric' => date('w', strtotime($record['timestamp'])),
         ];
 
+        if (isset($document['data']['nodeContextPath'])) {
+            $document['site'] = explode('/', $document['data']['nodeContextPath'])[1] ?? 'unknown';
+        } else {
+            $document['site'] = 'unknown';
+        }
 
         switch ($record['eventtype']) {
             case 'Node.Copy':

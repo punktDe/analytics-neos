@@ -22,6 +22,8 @@ PunktDe:
                 type: date
               nodeidentifier:
                 type: keyword
+              site:
+                type: keyword
               documentnodeidentifier:
                 type: keyword
               workspacename:
