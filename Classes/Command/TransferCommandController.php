@@ -61,13 +61,15 @@ class TransferCommandController extends CommandController
     {
         $this->outputLine('Recreating existing index ' . $this->historyIndex->getName());
         $this->elasticSearchService->recreateElasticIndex($this->historyIndex->getName());
-        (new HistoryTransferJob('neos_history'))->transfer($this->historyRepository->findAll());
+        $this->outputLine('Transferring data to index ' . $this->nodeDataIndex->getName());
+        (new HistoryTransferJob('neos_history'))->transferGeneric($this->historyRepository->findAll(), true);
     }
 
     public function nodedataCommand(): void
     {
         $this->outputLine('Recreating existing index ' . $this->nodeDataIndex->getName());
         $this->elasticSearchService->recreateElasticIndex($this->nodeDataIndex->getName());
-        (new NodeDataTransferJob('neos_nodedata'))->transfer($this->nodeDataRepository->findAll());
+        $this->outputLine('Transferring data to index ' . $this->nodeDataIndex->getName());
+        (new NodeDataTransferJob('neos_nodedata'))->transferGeneric($this->nodeDataRepository->findAll(), true);
     }
 }

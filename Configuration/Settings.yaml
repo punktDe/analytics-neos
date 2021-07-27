@@ -15,7 +15,7 @@ PunktDe:
             - 'neos_history*'
           settings:
             number_of_shards: 1
-            number_of_replicas: 0
+            number_of_replicas: 1
           mappings:
             properties:
               date:
@@ -68,7 +68,7 @@ PunktDe:
             - 'neos_nodedata*'
           settings:
             number_of_shards: 1
-            number_of_replicas: 0
+            number_of_replicas: 1
           mappings:
             properties:
               creationdatetime:
@@ -85,6 +85,8 @@ PunktDe:
                 type: keyword
               dimensionvalues:
                 type: object
+              outLinks:
+                type: keyword
 
 
     persistence:

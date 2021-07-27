@@ -11,8 +11,6 @@ namespace PunktDe\Analytics\Neos\Transfer;
 use PunktDe\Analytics\Neos\Elasticsearch\NodeDataIndex;
 use PunktDe\Analytics\Neos\Processor\NodeDataProcessor;
 use Neos\Flow\Annotations as Flow;
-use Doctrine\DBAL\Driver\Statement;
-use Neos\Flow\Log\Utility\LogEnvironment;
 use PunktDe\Analytics\Transfer\AbstractTransferJob;
 
 class NodeDataTransferJob extends AbstractTransferJob
@@ -28,18 +26,4 @@ class NodeDataTransferJob extends AbstractTransferJob
      * @var NodeDataIndex
      */
     protected $index;
-
-    public function transfer(Statement $statement): void
-    {
-        $this->logger->info(sprintf('Transferring Data from %s', $this->jobName), LogEnvironment::fromMethodName(__METHOD__));
-        $index = $this->index->getName();
-
-        while ($record = $statement->fetch(\PDO::FETCH_ASSOC)) {
-            $this->autoBulkIndex($this->processor->convertRecordToDocument($record, $index));
-            $this->logStats();
-        }
-
-        $this->flushBulkIndex();
-        $this->logStats(true);
-    }
 }

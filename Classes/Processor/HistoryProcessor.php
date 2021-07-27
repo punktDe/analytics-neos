@@ -19,7 +19,7 @@ use PunktDe\Analytics\Processor\ElasticsearchProcessorInterface;
  */
 class HistoryProcessor implements ElasticsearchProcessorInterface
 {
-    public function convertRecordToDocument(array $record, string $indexName): ?array
+    public function convertRecordToDocument(array $record, string $indexPrefix): ?array
     {
         $id = $record['uid'];
 
@@ -65,7 +65,7 @@ class HistoryProcessor implements ElasticsearchProcessorInterface
         }
 
         return [
-            'index' => $indexName,
+            'index' => $indexPrefix,
             'id' => $id,
             'body' => $document
         ];

@@ -3,7 +3,7 @@
     "description": "Analytics processor for Neos content and history",
     "type": "neos-package",
     "require": {
-        "punktde/analytics": "*"
+        "punktde/analytics": ">=2.0.0"
     },
     "autoload": {
         "psr-4": {

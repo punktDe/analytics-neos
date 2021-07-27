@@ -18,7 +18,7 @@ use PunktDe\Analytics\Processor\ElasticsearchProcessorInterface;
 class NodeDataProcessor implements ElasticsearchProcessorInterface
 {
 
-    public function convertRecordToDocument(array $record, string $indexName): ?array
+    public function convertRecordToDocument(array $record, string $indexPrefix): ?array
     {
         $id = $record['persistence_object_identifier'];
 
@@ -30,12 +30,21 @@ class NodeDataProcessor implements ElasticsearchProcessorInterface
             'workspacename' => $record['workspace'],
             'nodetype' => $record['nodetype'],
             'dimensionvalues' => json_decode($record['dimensionvalues'], true, 512, JSON_THROW_ON_ERROR),
+            'outLinks' => $this->extractLinks($record['properties']),
         ];
 
         return [
-            'index' => $indexName,
+            'index' => $indexPrefix,
             'id' => $id,
             'body' => $document
         ];
+    }
+
+    protected function extractLinks(string $properties): array
+    {
+        if (preg_match_all('/https?:\\\\\/\\\\\/([^\\\\\"\<]*)/', $properties, $matches)) {
+            return $matches[1];
+        }
+        return [];
     }
 }

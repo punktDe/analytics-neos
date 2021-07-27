@@ -8,12 +8,8 @@ namespace PunktDe\Analytics\Neos\Persistence;
  *  All rights reserved.
  */
 
-use Kingsquare\Quick\Transaction;
-use Neos\Flow\Annotations as Flow;
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
 use PunktDe\Analytics\Persistence\AbstractRepository;
-use PunktDe\Analytics\Persistence\DataSource;
-use PunktDe\Analytics\Persistence\DataSourceFactory;
 
 class NodeDataRepository extends AbstractRepository
 {
@@ -26,9 +22,9 @@ class NodeDataRepository extends AbstractRepository
         return 'neos_nodedata';
     }
 
-    public function findAll(int $offset = 0): Statement
+    public function findAll(): IterableResult
     {
-        $statement = $this->dataSource->getConnection()->prepare(sprintf('
+        $statement = sprintf('
 SELECT
 persistence_object_identifier,
 workspace,
@@ -37,12 +33,12 @@ nodetype,
 dimensionvalues,
 creationdatetime,
 lastmodificationdatetime,
-lastpublicationdatetime
+lastpublicationdatetime,
+properties
 FROM neos_contentrepository_domain_model_nodedata;
-'));
+');
 
-        $statement->execute();
-
-        return $statement;
+        $query = $this->dataSource->getEntityManager()->createNativeQuery($statement, $this->buildRsmByQuery($statement));
+        return $query->iterate();
     }
 }

@@ -4,16 +4,12 @@ declare(strict_types=1);
 namespace PunktDe\Analytics\Neos\Persistence;
 
 /*
- *  (c) 2019 punkt.de GmbH - Karlsruhe, Germany - http://punkt.de
+ *  (c) 2020 punkt.de GmbH - Karlsruhe, Germany - http://punkt.de
  *  All rights reserved.
  */
 
-use Kingsquare\Quick\Transaction;
-use Neos\Flow\Annotations as Flow;
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
 use PunktDe\Analytics\Persistence\AbstractRepository;
-use PunktDe\Analytics\Persistence\DataSource;
-use PunktDe\Analytics\Persistence\DataSourceFactory;
 
 class HistoryRepository extends AbstractRepository
 {
@@ -26,12 +22,11 @@ class HistoryRepository extends AbstractRepository
         return 'neos_history';
     }
 
-    public function findAll(int $offset = 0): Statement
+    public function findAll(): IterableResult
     {
-        $statement = $this->dataSource->getConnection()->prepare(sprintf('SELECT * FROM neos_neos_eventlog_domain_model_event'));
+        $statement = 'SELECT * FROM neos_neos_eventlog_domain_model_event';
 
-        $statement->execute();
-
-        return $statement;
+        $query = $this->dataSource->getEntityManager()->createNativeQuery($statement, $this->buildRsmByQuery($statement));
+        return $query->iterate();
     }
 }
