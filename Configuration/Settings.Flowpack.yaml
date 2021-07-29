@@ -1,0 +1,12 @@
+Flowpack:
+  Task:
+    tasks:
+      'PunktDe.Analytics.Neos:History':
+        label: Neos History Elasticsearch transfer
+        handlerClass: 'PunktDe\Analytics\Neos\TaskHandler\HistoryTransferHandler'
+        cronExpression: '5 2 * * *'
+
+      'PunktDe.Analytics.Neos:NodeData':
+        label: Neos Nodedata Elasticsearch transfer
+        handlerClass: 'PunktDe\Analytics\Neos\TaskHandler\NodeDataTransferHandler'
+        cronExpression: '10 2 * * *'

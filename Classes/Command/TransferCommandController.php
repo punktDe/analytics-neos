@@ -4,72 +4,29 @@ declare(strict_types=1);
 namespace PunktDe\Analytics\Neos\Command;
 
 /*
- *  (c) 2019 punkt.de GmbH - Karlsruhe, Germany - http://punkt.de
+ *  (c) 2020 punkt.de GmbH - Karlsruhe, Germany - http://punkt.de
  *  All rights reserved.
  */
 
-use PunktDe\Analytics\Neos\Elasticsearch\NodeDataIndex;
-use PunktDe\Analytics\Neos\Persistence\NodeDataRepository;
-use PunktDe\Analytics\Neos\Transfer\NodeDataTransferJob;
+use PunktDe\Analytics\Neos\Transfer\JobRunner;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
-use Psr\Log\LoggerInterface;
-use PunktDe\Analytics\Neos\Elasticsearch\HistoryIndex;
-use PunktDe\Analytics\Neos\Persistence\HistoryRepository;
-use PunktDe\Analytics\Neos\Transfer\HistoryTransferJob;
-use PunktDe\Analytics\Elasticsearch\ElasticsearchService;
 
 class TransferCommandController extends CommandController
 {
     /**
      * @Flow\Inject
-     * @var ElasticsearchService
+     * @var JobRunner
      */
-    protected $elasticSearchService;
-
-    /**
-     * @Flow\Inject
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @Flow\Inject
-     * @var HistoryIndex
-     */
-    protected $historyIndex;
-
-    /**
-     * @Flow\Inject
-     * @var HistoryRepository
-     */
-    protected $historyRepository;
-
-    /**
-     * @Flow\Inject
-     * @var NodeDataRepository
-     */
-    protected $nodeDataRepository;
-
-    /**
-     * @Flow\Inject
-     * @var NodeDataIndex
-     */
-    protected $nodeDataIndex;
+    protected $jobRunner;
 
     public function historyCommand(): void
     {
-        $this->outputLine('Recreating existing index ' . $this->historyIndex->getName());
-        $this->elasticSearchService->recreateElasticIndex($this->historyIndex->getName());
-        $this->outputLine('Transferring data to index ' . $this->nodeDataIndex->getName());
-        (new HistoryTransferJob('neos_history'))->transferGeneric($this->historyRepository->findAll(), true);
+        $this->jobRunner->runHistoryTransfer();
     }
 
     public function nodedataCommand(): void
     {
-        $this->outputLine('Recreating existing index ' . $this->nodeDataIndex->getName());
-        $this->elasticSearchService->recreateElasticIndex($this->nodeDataIndex->getName());
-        $this->outputLine('Transferring data to index ' . $this->nodeDataIndex->getName());
-        (new NodeDataTransferJob('neos_nodedata'))->transferGeneric($this->nodeDataRepository->findAll(), true);
+        $this->jobRunner->runNodeDataTransfer();
     }
 }
