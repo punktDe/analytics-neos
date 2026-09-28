@@ -29,6 +29,8 @@ class HistoryProcessor implements ElasticsearchProcessorInterface
             'date' => date('c', strtotime($record['timestamp'])),
             'nodeidentifier' => $record['nodeidentifier'],
             'documentnodeidentifier' => $record['documentnodeidentifier'],
+            'title' => $record['title'] ?? null,
+            'uri' => $record['uri'] ?? null,
             'accountidentifier' => $record['accountidentifier'],
             'eventtype' => $record['eventtype'],
             'dimension' => empty($record['dimension']) ? [] : unserialize($record['dimension']),

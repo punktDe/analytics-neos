@@ -1,5 +1,11 @@
 PunktDe:
   Analytics:
+    neos:
+      history:
+        # Time window the events are read from, given as a MySQL INTERVAL expression
+        # ("<number> <unit>", e.g. '1 DAY', '2 WEEK', '6 MONTH').
+        interval: '2 DAY'
+
     elasticsearch:
 
       server:
@@ -25,6 +31,10 @@ PunktDe:
               site:
                 type: keyword
               documentnodeidentifier:
+                type: keyword
+              title:
+                type: keyword
+              uri:
                 type: keyword
               workspacename:
                 type: keyword
