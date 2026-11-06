@@ -2,6 +2,7 @@
     "name": "punktde/analytics-neos",
     "description": "Analytics processor for Neos content and history",
     "type": "neos-package",
+    "license": "MIT",
     "require": {
         "punktde/analytics": ">=2.0.0",
         "flowpack/task": "*"
